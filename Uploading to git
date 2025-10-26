@@ -1,0 +1,339 @@
+# 1. Initialize a new git repository
+git init
+
+# 2. Stage all files for commit (had to remove 'nul' file first, then retry)
+git add .
+
+# 3. Create initial commit
+git commit -m "This is the Dashboard yo."
+
+# 4. Add GitHub remote repository
+git remote add origin https://github.com/tzurielpedigo/MandemDAO_Dashboard.git
+
+# 5. Rename branch to 'main' (was 'master' by default)
+git branch -M main
+
+# 6. Authenticate with GitHub CLI
+gh auth login
+# (Selected: GitHub.com → HTTPS → Yes to Git credentials → Web browser)
+# (Used one-time code: 70B3-DAC9)
+
+# 7. Push to GitHub (fixed typo from 'orgin' to 'origin')
+git push -u origin main
+
+
+
+# Git & GitHub Guide for MandemDAO Dashboard
+
+A comprehensive guide to Git workflows, branches, forks, and common scenarios.
+
+---
+
+## **DAILY WORKFLOW - Making Changes**
+
+```bash
+# When you modify files locally and want to save to GitHub:
+git add .                           # Stage all changes
+git commit -m "Description"         # Commit with message
+git push                            # Push to GitHub
+```
+
+```bash
+# Or do it all at once:
+git add . && git commit -m "Fixed bug in wallet stats" && git push
+```
+
+---
+
+## **CHECKING STATUS**
+
+```bash
+git status                          # See what files changed
+git log                             # See commit history
+git diff                            # See exact changes before committing
+```
+
+---
+
+## **BRANCHES - Working on Features**
+
+**When to use:** You want to work on a new feature without breaking the main code.
+
+```bash
+# Create and switch to new branch
+git checkout -b feature-new-dashboard
+
+# Make changes, then commit
+git add .
+git commit -m "Added new dashboard feature"
+
+# Push branch to GitHub
+git push -u origin feature-new-dashboard
+
+# Switch back to main
+git checkout main
+
+# Merge feature into main (after testing)
+git merge feature-new-dashboard
+git push
+
+# Delete branch after merging
+git branch -d feature-new-dashboard
+git push origin --delete feature-new-dashboard
+```
+
+---
+
+## **COMMON SCENARIOS**
+
+### **Scenario 1: Quick Fix**
+```bash
+# Edit files → Save
+git add .
+git commit -m "Quick fix for P&L calculation"
+git push
+```
+
+### **Scenario 2: New Feature (use branch)**
+```bash
+git checkout -b add-twitter-integration
+# Work on feature...
+git add .
+git commit -m "Added Twitter API integration"
+git push -u origin add-twitter-integration
+# Create Pull Request on GitHub → Merge → Delete branch
+```
+
+### **Scenario 3: Experimental Changes (use branch)**
+```bash
+git checkout -b experiment-new-algorithm
+# Try something risky...
+# If it works: merge it
+# If it doesn't: just delete the branch
+git checkout main
+git branch -D experiment-new-algorithm  # Delete without merging
+```
+
+### **Scenario 4: Working with Team**
+```bash
+# Before starting work, get latest changes
+git pull
+
+# Make your changes
+git add .
+git commit -m "My changes"
+git push
+```
+
+### **Scenario 5: Someone Else Made Changes**
+```bash
+# Pull their changes from GitHub
+git pull
+
+# If there are conflicts, Git will tell you
+# Edit the conflicted files, then:
+git add .
+git commit -m "Resolved merge conflicts"
+git push
+```
+
+---
+
+## **FORKS - When to Use**
+
+**Fork = Your own copy of someone else's repo**
+
+### **Use Case 1:** Contributing to someone else's project
+```bash
+# 1. Click "Fork" on their GitHub repo (creates copy in your account)
+# 2. Clone YOUR fork
+git clone https://github.com/YOUR_USERNAME/THEIR_PROJECT.git
+
+# 3. Make changes
+git add .
+git commit -m "Added feature"
+git push
+
+# 4. On GitHub, click "New Pull Request" to suggest changes to original repo
+```
+
+### **Use Case 2:** Starting from a template
+```bash
+# Fork a template repo → Customize it for your needs
+# You now own it completely
+```
+
+---
+
+## **BRANCHES VS FORKS**
+
+| **Branches** | **Forks** |
+|-------------|----------|
+| Same repo, different versions | Complete copy of entire repo |
+| Use for your own features | Use for others' projects |
+| You have write access | You own your copy |
+| Merge locally | Merge via Pull Request |
+
+---
+
+## **REAL-WORLD SCENARIOS FOR YOUR PROJECT**
+
+### **1. Daily Updates**
+```bash
+# You fix bugs or add features
+git add .
+git commit -m "Updated wallet stats algorithm"
+git push
+```
+
+### **2. Major Feature Development**
+```bash
+# Big change that might break things
+git checkout -b add-solana-wallet-integration
+# Work for days/weeks...
+git add .
+git commit -m "Completed Solana integration"
+git push -u origin add-solana-wallet-integration
+# Test thoroughly, then merge to main
+```
+
+### **3. Quick Hotfix**
+```bash
+# Production is broken, need immediate fix
+git checkout -b hotfix-csv-export
+# Fix the bug
+git add .
+git commit -m "Fixed CSV export crash"
+git push -u origin hotfix-csv-export
+# Merge immediately to main
+git checkout main
+git merge hotfix-csv-export
+git push
+```
+
+### **4. Trying New Libraries**
+```bash
+# Not sure if new library will work
+git checkout -b test-new-charting-library
+# Install and test...
+# If good: merge. If bad: delete branch
+```
+
+### **5. Team Member Wants to Help**
+```bash
+# They fork your repo
+# Make changes in their fork
+# Send you a Pull Request
+# You review on GitHub → Merge if good
+```
+
+---
+
+## **IMPORTANT COMMANDS CHEAT SHEET**
+
+### Starting Fresh
+```bash
+git init                                    # Make folder a git repo
+git clone [url]                            # Download repo from GitHub
+```
+
+### Daily Workflow
+```bash
+git status                                 # What changed?
+git add .                                  # Stage everything
+git add file.py                           # Stage specific file
+git commit -m "Message"                   # Save changes
+git push                                  # Upload to GitHub
+git pull                                  # Download from GitHub
+```
+
+### Branches
+```bash
+git branch                                # List branches
+git checkout -b new-branch                # Create and switch
+git checkout main                         # Switch to main
+git merge other-branch                    # Merge into current branch
+git branch -d branch-name                 # Delete branch (safe)
+git branch -D branch-name                 # Delete branch (force)
+```
+
+### Undo Mistakes
+```bash
+git reset HEAD~1                          # Undo last commit (keep changes)
+git reset --hard HEAD~1                   # Undo last commit (delete changes)
+git checkout -- file.py                   # Discard changes to file
+```
+
+### Remote Management
+```bash
+git remote -v                             # Show remote URLs
+git remote add origin [url]               # Add GitHub repo
+git push -u origin main                   # Push and set upstream
+```
+
+---
+
+## **WHEN TO USE WHAT**
+
+| Situation | Command |
+|-----------|---------|
+| Regular code updates | `git add . && git commit -m "..." && git push` |
+| New risky feature | Create branch, work there, merge when done |
+| Quick emergency fix | Hotfix branch → fix → merge → push |
+| Trying something experimental | Branch → test → keep or delete |
+| Contributing to others | Fork their repo → change → Pull Request |
+| Multiple people on team | Always `git pull` before working |
+| Backing up work | Just `git push` regularly |
+
+---
+
+## **INITIAL SETUP COMMANDS (Already Done)**
+
+Here's what you ran to set up this repository:
+
+```bash
+# 1. Initialize a new git repository
+git init
+
+# 2. Stage all files for commit
+git add .
+
+# 3. Create initial commit
+git commit -m "This is the Dashboard yo."
+
+# 4. Add GitHub remote repository
+git remote add origin https://github.com/tzurielpedigo/MandemDAO_Dashboard.git
+
+# 5. Rename branch to 'main'
+git branch -M main
+
+# 6. Authenticate with GitHub CLI
+gh auth login
+
+# 7. Push to GitHub
+git push -u origin main
+```
+
+---
+
+## **TL;DR - Quick Reference**
+
+**Most days:** Just `git add . && git commit -m "..." && git push`
+
+**Big features:** Use branches
+
+**Never:** Edit main branch directly if working with a team
+
+**Forks:** Only when contributing to someone else's code
+
+---
+
+## **Project Repository**
+
+**URL:** https://github.com/tzurielpedigo/MandemDAO_Dashboard
+
+**Type:** Private
+
+**Main Branch:** main
+
+**Files:** 22 files (8,509 lines of code)
